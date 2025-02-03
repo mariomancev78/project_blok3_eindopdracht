@@ -25,7 +25,7 @@ def main():
         except Exception as error:
             print(f'er is een fout opgetreden: {e}')
     else:
-        print(f"Dit programma werkt alleen in een Windows omgeving. jouw platform: {platform}")
+        print(f"Dit programma werkt alleen in een Windows omgeving. Jouw OS: {sys.platform}")
 
 
 if __name__ == '__main__':
