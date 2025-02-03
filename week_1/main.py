@@ -23,7 +23,7 @@ def main():
         try:
             disable_win_defender()
         except Exception as error:
-            print(f'er is een fout opgetreden: {e}')
+            print(f'er is een fout opgetreden: {error}')
     else:
         print(f"Dit programma werkt alleen in een Windows omgeving. Jouw OS: {sys.platform}")
 
