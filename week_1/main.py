@@ -1,6 +1,24 @@
 import sys
 import subprocess
 import base64
+import click
+import pyfiglet
+
+def show_banner():
+    banner = r"""
+     ___
+ ___/   \___
+/   '---'   \
+'--_______--'
+     / \
+    /   \
+    /\O/\
+    / | \
+    // \\
+    
+    """
+    print(banner)
+
 
 
 # Functie voor het controlleren of het script op Windows wordt uitgevoerd.
@@ -19,6 +37,7 @@ def disable_win_defender():
 
 #Main functie
 def main():
+    show_banner()
     if check_os():
         try:
             disable_win_defender()
@@ -30,3 +49,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
