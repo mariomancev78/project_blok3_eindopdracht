@@ -38,8 +38,8 @@ def disable_win_defender():
 # Disable is de enige fuctionaliteit voor nu...
 #Main functie
 def main(action):
-    show_banner()
     if not action:
+        show_banner()
         action = click.prompt('Welke actie wil je uitvoeren?', type=click.Choice(["disable"]))
     match action:
         case "disable":
