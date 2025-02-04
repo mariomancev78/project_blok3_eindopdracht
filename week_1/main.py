@@ -1,26 +1,21 @@
+#!/bin/python3
+
 import sys
 import subprocess
 import base64
 import click
 import pyfiglet
+import random
+from banners import banner_list
 
 def show_banner():
-    banner = r"""
-     ___
- ___/   \___
-/   '---'   \
-'--_______--'
-     / \
-    /   \
-    /\O/\
-    / | \
-    // \\
-    
-    """
-    print(banner)
+    selected_banner_ascii = random.choice(banner_list)
+    version = 1.0
 
-
-
+    complete_banner = f"{selected_banner_ascii}"
+    print(complete_banner)
+    pyfiglet.print_figlet(f"Winsploit\nVer: {version}", font='rectangles')
+    print("\nLaurens Metz,\nThijs Vixseboxse,\nMario Mancev")
 # Functie voor het controlleren of het script op Windows wordt uitgevoerd.
 def check_os():
     if sys.platform == "win32":
