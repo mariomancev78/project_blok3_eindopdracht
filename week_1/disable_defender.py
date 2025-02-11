@@ -77,9 +77,12 @@ def check_defender_status():
 
 
 def show_running_processes():
-    show_ps_command = "gps"
     try:
-        return "de draaiende processen:"
-        subprocess.call(f"powershell.exe {show_ps_command}", shell=True)
+        result = subprocess.run(["powershell", "-Command", "gps"],
+                                text=True, capture_output=True)
+        if result.returncode == 0:
+            return result.stdout
+        else:
+            return f"Powershell error: {result.stderr}"
     except Exception as e:
         return f"er ging iets mis: {e}"
