@@ -80,30 +80,3 @@ def show_running_processes():
         subprocess.call(f"powershell.exe {show_ps_command}", shell=True)
     except Exception as e:
         return f"er ging iets mis: {e}"
-
-
-@click.command()
-@click.option("--action", help="De actie die uitgevoerd moet worden.", type=click.Choice(["disable_defender", "ps"]))
-# disable_defender voor het uitzetten van defender. ps voor het tonen van draaiende processen.
-# Main functie
-def main(action):
-    if not action:
-        show_banner()
-        action = click.prompt('Welke actie wil je uitvoeren?',
-                              type=click.Choice(["disable_defender", "ps"]))
-    match action:
-        case "disable_defender":
-            # Is dit een windows omgeving?
-            if check_os():
-                click.echo(disable_defender_test())
-            else:
-                click.echo(f"Dit programma werkt alleen in een Windows omgeving. Jouw OS: {
-                           sys.platform}")
-        case "ps":
-            click.echo(show_running_processes())
-
-
-if __name__ == '__main__':
-    main()
-
-# TODO: wachtwoord vragen en Powershell als administrator runnen
