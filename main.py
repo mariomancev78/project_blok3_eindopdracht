@@ -1,6 +1,6 @@
 import sys
 import click
-from week_1.main import disable_defender_test, check_os, check_defender_status, show_banner, show_running_processes
+from week_1.disable_defender import disable_defender, check_os, check_defender_status, show_banner, show_running_processes
 
 
 @click.command()
@@ -16,14 +16,18 @@ def main(action):
         case "disable_defender":
             # Is dit een windows omgeving?
             if check_os():
-                click.echo(disable_defender_test())
+                click.echo(disable_defender())
             else:
-                click.echo(f"Dit programma werkt alleen in een Windows omgeving. Jouw OS: {
+                click.echo(f"Deze functie werkt alleen in een Windows omgeving. Jouw OS: {
                            sys.platform}")
         case "ps":
             click.echo(show_running_processes())
         case "check_defender_status":
-            pass
+            if check_os:
+                click.echo(check_defender_status())
+            else:
+                click.echo(f"Deze functie werkt alleen in een Windows omgeving. Jouw OS: {
+                           sys.platform}")
 
 
 if __name__ == '__main__':
