@@ -3,7 +3,7 @@ import subprocess
 import click
 import pyfiglet
 import random
-from banners import banner_list
+from week_1.banners import banner_list
 import ctypes
 
 
@@ -34,7 +34,7 @@ def is_admin():
         return False
 
 
-def disable_defender_test():
+def disable_defender():
     # poweshell CMDlets voor het uitschakelen van Windows Defender
     disable_defender_cmd = [
         "powershell",
@@ -43,13 +43,17 @@ def disable_defender_test():
         "-Command",
         "Set-MpPreference -DisableRealtimeMonitoring $true"
     ]
+    if is_admin():
+        try:
+            subprocess.run(disable_defender_cmd, shell=True, check=True,
+                           capture_output=True, text=True)
+            return "real-time bescherming is uitgeschakeld"
 
-    try:
-        subprocess.run(disable_defender_cmd, shell=True, check=True,
-                       capture_output=True, text=True)
-        print("real-time bescherming is uitgeschakeld")
-    except subprocess.CalledProcessError as e:
-        print(f"Fout bij het uitschakelen van Defender: {e.stderr}")
+        except subprocess.CalledProcessError as e:
+            return f"Fout bij het uitschakelen van Defender: {e.stderr}"
+    else:
+        return "voer dit script in een admin venster uit."
+        print(is_admin())
 
 
 def check_defender_status():
@@ -70,7 +74,7 @@ def check_defender_status():
 
             return "Defender real-time protection is  nog INGESCHAKELD, probeer tamper protection uit te zetten."
     except subprocess.CalledProcessError as error:
-        print(f"fout bij het uitschakelen van defender: {error}")
+        return f"fout bij het uitschakelen van defender: {error}"
 
 
 def show_running_processes():
