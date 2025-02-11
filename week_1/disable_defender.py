@@ -53,7 +53,6 @@ def disable_defender():
             return f"Fout bij het uitschakelen van Defender: {e.stderr}"
     else:
         return "voer dit script in een admin venster uit."
-        print(is_admin())
 
 
 def check_defender_status():
@@ -72,7 +71,7 @@ def check_defender_status():
             return "Defender real-time protection is UITGESCHAKELD"
         else:
 
-            return "Defender real-time protection is  nog INGESCHAKELD, probeer tamper protection uit te zetten."
+            return "Defender real-time protection is nog INGESCHAKELD"
     except subprocess.CalledProcessError as error:
         return f"fout bij het uitschakelen van defender: {error}"
 

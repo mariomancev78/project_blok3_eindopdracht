@@ -4,14 +4,14 @@ from week_1.disable_defender import disable_defender, check_os, check_defender_s
 
 
 @click.command()
-@click.option("--action", help="De actie die uitgevoerd moet worden.", type=click.Choice(["disable_defender", "ps"]))
+@click.option("--action", help="De actie die uitgevoerd moet worden.", type=click.Choice(["disable_defender", "ps", "check_defender_status"]))
 # disable_defender voor het uitzetten van defender. ps voor het tonen van draaiende processen.
 # Main functie
 def main(action):
     if not action:
         show_banner()
         action = click.prompt('Welke actie wil je uitvoeren?',
-                              type=click.Choice(["disable_defender", "ps"]))
+                              type=click.Choice(["disable_defender", "ps", "check_defender_status"]))
     match action:
         case "disable_defender":
             # Is dit een windows omgeving?
