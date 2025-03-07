@@ -10,9 +10,9 @@ $point = New-Object System.Drawing.Point(0, 0)
 $graphic.CopyFromScreen($point, $point, $image.Size)
 $cursorBounds = New-Object System.Drawing.Rectangle([System.Windows.Forms.Cursor]::Position, [System.Windows.Forms.Cursor]::Current.Size)
 [System.Windows.Forms.Cursors]::Default.Draw($graphic, $cursorBounds)
-$screen_file = "$Path\" + $env:computername + "_" + $env:username + "_" + "$((get-date).tostring('yyyy.MM.dd-HH.mm.ss')).png"
+$screen_file = "$Path\screenshot.png"
 $image.Save($screen_file, [System.Drawing.Imaging.ImageFormat]::Png)
 $graphic.Dispose()
 $image.Dispose()
-Write-Output "Screenshot saved at: $screen_file"
+Write-Output "Screenshot opgeslagen als: $screen_file"
 
