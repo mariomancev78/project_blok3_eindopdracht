@@ -4,7 +4,7 @@ from week_1.disable_defender import disable_defender, show_running_processes, sh
 from week_2.discord_bot import start_bot
 from week_3.screenshot.take_screenshot import take_screenshot
 from week_3.mic.record_mic import record_mic, list_audio_devices
-
+from week_3.camerav2 import maak_foto
 
 accepted_functions = ["disable_defender",
                       "ps",
@@ -12,7 +12,9 @@ accepted_functions = ["disable_defender",
                       "start_discord_bot",
                       "take_screenshot",
                       "record_mic",
-                      "list_audio_devices"]
+                      "list_audio_devices"
+                      "maak_foto"
+                      ]
 
 
 @click.command()
@@ -51,6 +53,8 @@ def main(action):
             else:
                 click.echo(
                     f"er ging iets mis tijdens het ophalen van apparaten: {result}")
+        case "maak_foto":
+            click.echo(maak_foto("./", "foto"))
 
 
 if __name__ == '__main__':
