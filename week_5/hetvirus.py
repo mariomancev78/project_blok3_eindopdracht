@@ -78,12 +78,12 @@ def bring_to_front():
 def ghost_move():
     while True:
         current_pos = pyautogui.position()
-        angle = math.radians(random.randint(-180, 180))  # Extreme unpredictable movement
-        speed = random.randint(50, 200)  # Even larger jumps
+        angle = math.radians(random.randint(-180, 180))  
+        speed = random.randint(50, 200)  
         new_x = max(0, min(screen_width - 1, current_pos[0] + int(speed * math.cos(angle))))
         new_y = max(0, min(screen_height - 1, current_pos[1] + int(speed * math.sin(angle))))
-        pyautogui.moveTo(new_x, new_y, duration=0.02)  # Insanely fast movement
-        time.sleep(0.05)  # Almost no delay
+        pyautogui.moveTo(new_x, new_y, duration=0.02)  
+        time.sleep(0.05) 
 
 threading.Thread(target=move_window, daemon=True).start()
 threading.Thread(target=bring_to_front, daemon=True).start()
