@@ -22,7 +22,7 @@ mods = set()
 buffer = []
 BUF_GROOTTE = 20
 FLUSH_TIJD = 5
-MAX_TIJD = 60
+MAX_TIJD = 10
 start = time.time()
 
 

